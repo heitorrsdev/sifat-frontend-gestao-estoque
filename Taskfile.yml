@@ -1,0 +1,32 @@
+version: '3'
+
+vars:
+  TREE_IGNORE: node_modules|.git|dist|*.env*
+  NODE_VERSION:
+    sh: cat .node-version
+
+env:
+  PATH: "{{.HOME}}/.local/share/fnm/node-versions/{{.NODE_VERSION}}/installation/bin:{{.PATH}}"
+
+tasks:
+
+  # ─────────────────────────────────────────────
+  # Quality
+  # ─────────────────────────────────────────────
+
+  lint:
+    cmds:
+      - pnpm lint
+
+  typecheck:
+    cmds:
+      - pnpm tsc --noEmit
+
+  # ─────────────────────────────────────────────
+  # Utils
+  # ─────────────────────────────────────────────
+
+  tree:
+    cmds:
+      - echo "🌳 Folder structure"
+      - tree -a -L 6 -I "{{.TREE_IGNORE}}" --prune
