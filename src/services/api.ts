@@ -4,7 +4,7 @@ const API_URL = 'https://my-json-server.typicode.com/Sifat-devs/db-desafio-front
 const isProduction = import.meta.env.PROD;
 
 export const api = axios.create({
-  baseURL: isProduction ? API_URL : 'http://localhost:3000',
+  baseURL: API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
