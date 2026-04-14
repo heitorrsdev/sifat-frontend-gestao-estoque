@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
 import { ToastContainer } from 'react-toastify';
+import { EstoqueProvider } from './contexts/EstoqueContext';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
 
@@ -14,7 +15,9 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <EstoqueProvider>
+      <RouterProvider router={router} />
+    </EstoqueProvider>
     <ToastContainer position="top-right" autoClose={3000} />
   </StrictMode>
 );

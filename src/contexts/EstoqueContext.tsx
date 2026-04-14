@@ -1,0 +1,108 @@
+import { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { toast } from 'react-toastify';
+import { api } from '../services/api';
+import type { Produto, ProdutoPayload, Venda, Grupo } from '../types';
+
+interface EstoqueContextData {
+  produtos: Produto[];
+  vendas: Venda[];
+  grupos: Grupo[];
+  isLoading: boolean;
+  createProduto: (payload: ProdutoPayload) => Promise<void>;
+  updateProduto: (id: number, payload: ProdutoPayload) => Promise<void>;
+  deleteProduto: (id: number) => Promise<void>;
+}
+
+const EstoqueContext = createContext<EstoqueContextData | undefined>(undefined);
+
+export function EstoqueProvider({ children }: { children: ReactNode }) {
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [vendas, setVendas] = useState<Venda[]>([]);
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const [resProdutos, resVendas, resGrupos] = await Promise.all([
+          api.get<Produto[]>('/produtos_cadastrados'),
+          api.get<Venda[]>('/vendas'),
+          api.get<Grupo[]>('/grupos'),
+        ]);
+
+        setProdutos(resProdutos.data);
+        setVendas(resVendas.data);
+        setGrupos(resGrupos.data);
+      } catch {
+        toast.error('Erro ao carregar dados do servidor.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchData();
+  }, []);
+
+  const createProduto = useCallback(async (payload: ProdutoPayload) => {
+    try {
+      await api.post('/produtos_cadastrados', payload);
+      
+      setProdutos((prev: Produto[]) => {
+        const nextId = prev.length > 0 ? Math.max(...prev.map((p) => p.id)) + 1 : 1;
+        return [...prev, { ...payload, id: nextId } as Produto];
+      });
+
+      toast.success('Produto cadastrado com sucesso!');
+    } catch (error) {
+      toast.error('Falha ao cadastrar o produto.');
+      throw error;
+    }
+  }, []);
+
+  const updateProduto = useCallback(async (id: number, payload: ProdutoPayload) => {
+    try {
+      await api.put(`/produtos_cadastrados/${String(id)}`, payload);
+      
+      setProdutos((prev) =>
+        prev.map((produto) => (produto.id === id ? { ...produto, ...payload } : produto))
+      );
+
+      toast.success('Produto atualizado com sucesso!');
+    } catch (error) {
+      toast.error('Falha ao atualizar o produto.');
+      throw error;
+    }
+  }, []);
+
+  const deleteProduto = useCallback(async (id: number) => {
+    try {
+      await api.delete(`/produtos_cadastrados/${String(id)}`);
+      
+      setProdutos((prev) => prev.filter((produto) => produto.id !== id));
+      
+      toast.success('Produto excluído com sucesso!');
+    } catch (error) {
+      toast.error('Falha ao excluir o produto.');
+      throw error;
+    }
+  }, []);
+
+  return (
+    <EstoqueContext.Provider
+      value={{
+        produtos,
+        vendas,
+        grupos,
+        isLoading,
+        createProduto,
+        updateProduto,
+        deleteProduto,
+      }}
+    >
+      {children}
+    </EstoqueContext.Provider>
+  );
+}
+
+export default EstoqueContext;
