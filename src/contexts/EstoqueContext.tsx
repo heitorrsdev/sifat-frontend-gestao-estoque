@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useState, useEffect, useCallback, type ReactNode, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
 import type { Produto, ProdutoPayload, Venda, Grupo } from '../types';
@@ -88,18 +88,18 @@ export function EstoqueProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const contextValue = useMemo(() => ({
+    produtos,
+    vendas,
+    grupos,
+    isLoading,
+    createProduto,
+    updateProduto,
+    deleteProduto,
+  }), [produtos, vendas, grupos, isLoading, createProduto, updateProduto, deleteProduto]);
+
   return (
-    <EstoqueContext.Provider
-      value={{
-        produtos,
-        vendas,
-        grupos,
-        isLoading,
-        createProduto,
-        updateProduto,
-        deleteProduto,
-      }}
-    >
+    <EstoqueContext.Provider value={contextValue}>
       {children}
     </EstoqueContext.Provider>
   );

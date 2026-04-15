@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useEstoque } from '../hooks/useEstoque';
@@ -63,13 +63,13 @@ export function Produtos() {
     },
   ];
 
-  const filterFn = (item: ProdutoEnriquecido, search: string) => {
+  const filterFn = useCallback((item: ProdutoEnriquecido, search: string) => {
     const term = search.toLowerCase();
     return (
       item.nome.toLowerCase().includes(term) ||
       item.nomeGrupo.toLowerCase().includes(term)
     );
-  };
+  }, []);
 
   if (isLoading) {
     return (
