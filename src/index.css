@@ -1,14 +1,5 @@
 @import "tailwindcss";
 
-.scroll-hidden {
-  overflow: auto;
-  scrollbar-width: none;
-}
-
-.scroll-hidden::-webkit-scrollbar {
-  display: none;
-}
-
 .sifat-bg {
   background:linear-gradient(to bottom, #ffffff, #9d9d9d94);
 }
