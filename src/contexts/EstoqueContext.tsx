@@ -75,6 +75,7 @@ export function EstoqueProvider({ children }: { children: ReactNode }) {
       } else {
         toast.error('Erro ao atualizar o produto na API.');
       }
+      throw error;
     }
   }, []);
 
@@ -85,8 +86,13 @@ export function EstoqueProvider({ children }: { children: ReactNode }) {
       setProdutos((prev) => prev.filter((produto) => produto.id !== id));
       
       toast.success('Produto excluído com sucesso!');
-    } catch (error) {
-      toast.error('Falha ao excluir o produto.');
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response?.status === 404) {
+        setProdutos((prev) => prev.filter((produto) => produto.id !== id));
+        toast.success('Produto excluído (Mock local)');
+      } else {
+        toast.error('Falha ao excluir o produto.');
+      }
       throw error;
     }
   }, []);
