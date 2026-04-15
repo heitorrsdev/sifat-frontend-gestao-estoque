@@ -11,7 +11,7 @@ const produtoSchema = z.object({
   nome: z.string().min(1, 'O nome do produto é obrigatório.'),
   idGrupo: z.number({ message: 'Selecione um grupo válido.' }).min(1, 'Selecione um grupo válido.'),
   precoVenda: z.number({ message: 'Preço inválido.' }).positive('O preço deve ser maior que zero.'),
-  quantidadeEstoque: z.number({ message: 'Quantidade inválida.' }).min(0, 'A quantidade não pode ser negativa.'),
+  quantidadeEstoque: z.number().min(0, 'A quantidade não pode ser negativa.').optional().catch(0),
 });
 
 type ProdutoFormData = z.infer<typeof produtoSchema>;
@@ -61,7 +61,7 @@ const {
         nome: data.nome,
         idGrupo: data.idGrupo,
         precoVenda: data.precoVenda,
-        quantidadeEstoque: data.quantidadeEstoque,
+        quantidadeEstoque: data.quantidadeEstoque ?? 0,
       };
 
       if (isEditMode) {

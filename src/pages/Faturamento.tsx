@@ -1,6 +1,7 @@
 import { useEstoque } from '../hooks/useEstoque';
 import { DataTable, type Column } from '../components/DataTable';
 import type { Venda } from '../types';
+import { useCallback } from 'react';
 
 export function Faturamento() {
   const { vendas, isLoading } = useEstoque();
@@ -44,9 +45,9 @@ export function Faturamento() {
     },
   ];
 
-  const filterFn = (item: Venda, search: string) => {
+  const filterFn = useCallback((item: Venda, search: string) => {
     return String(item.idPedido).includes(search);
-  };
+  }, []);
 
   if (isLoading) {
     return (

@@ -79,6 +79,13 @@ export function DataTable<T>({
     setCurrentPage(1);
   };
 
+  const getRowKey = (item: unknown, rowIdx: number) => {
+    if (item && typeof item === 'object' && 'id' in item) {
+      return String(item.id);
+    }
+    return rowIdx;
+  };
+
   return (
     <div className="w-full bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
       {/* Top Bar: Search */}
@@ -143,7 +150,7 @@ export function DataTable<T>({
           <tbody className="bg-white divide-y divide-gray-200">
             {paginatedData.length > 0 ? (
               paginatedData.map((item, rowIdx) => (
-                <tr key={rowIdx} className="hover:bg-gray-50 transition-colors">
+                <tr key={getRowKey(item, rowIdx)} className="hover:bg-gray-50 transition-colors">  
                   {columns.map((col, colIdx) => (
                     <td key={colIdx} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {col.render ? col.render(item) : (item[col.accessor as keyof T] as React.ReactNode)}
