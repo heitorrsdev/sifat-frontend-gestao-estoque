@@ -3,7 +3,6 @@ import { App } from './App';
 import { Faturamento } from './pages/Faturamento';
 import { Produtos } from './pages/Produtos';
 import { Cadastro } from './pages/Cadastro';
-import Placeholder from './pages/placeholder';
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +23,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/editar/:id',
-        element: <Placeholder />,
+        element: <Cadastro />,
       },
     ],
   },
