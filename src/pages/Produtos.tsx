@@ -5,15 +5,12 @@ import { useEstoque } from '../hooks/useEstoque';
 import { DataTable, type Column } from '../components/DataTable';
 import type { Produto } from '../types';
 
-// Estendemos a interface localmente para tipar a injeção do nome do grupo
 type ProdutoEnriquecido = Produto & { nomeGrupo: string };
 
 export function Produtos() {
   const { produtos, grupos, deleteProduto, isLoading } = useEstoque();
   const navigate = useNavigate();
 
-  // Enriquecimento de Dados (Join em Memória)
-  // Cruzamos o idGrupo com o array de grupos para expor o 'nomeGrupo' à tabela
   const produtosEnriquecidos = useMemo<ProdutoEnriquecido[]>(() => {
     return produtos.map((produto) => {
       const grupoCorreto = grupos.find((g) => g.id === produto.idGrupo);
@@ -24,15 +21,12 @@ export function Produtos() {
     });
   }, [produtos, grupos]);
 
-  // Handler de Exclusão (Requisito da Lixeira)
   const handleDelete = async (id: number) => {
-    // Um simples window.confirm substitui a necessidade de um Modal complexo neste escopo
     if (window.confirm('Atenção: Tem certeza que deseja excluir este produto do estoque?')) {
       await deleteProduto(id);
     }
   };
 
-  // Definição Estrita das Colunas
   const columns: Column<ProdutoEnriquecido>[] = [
     { header: 'ID', accessor: 'id' },
     { header: 'Nome', accessor: 'nome' },
@@ -47,7 +41,7 @@ export function Produtos() {
     {
       header: 'Ações',
       accessor: 'acoes',
-      sortable: false, // Não faz sentido ordenar botões
+      sortable: false,
       render: (item) => (
         <div className="flex gap-4 items-center">
           <button
@@ -58,7 +52,6 @@ export function Produtos() {
             <Pencil className="w-4 h-4" />
           </button>
           <button
-            // Precisamos do void para silenciar o ESLint sobre Promises não tratadas no onClick
             onClick={() => void handleDelete(item.id)}
             className="text-red-600 hover:text-red-800 transition-colors"
             title="Excluir Produto"
@@ -70,7 +63,6 @@ export function Produtos() {
     },
   ];
 
-  // Requisito: Filtro apenas por Nome e Grupo
   const filterFn = (item: ProdutoEnriquecido, search: string) => {
     const term = search.toLowerCase();
     return (
