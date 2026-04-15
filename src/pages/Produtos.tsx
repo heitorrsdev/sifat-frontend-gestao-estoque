@@ -49,14 +49,14 @@ export function Produtos() {
             className="text-blue-600 hover:text-blue-800 transition-colors"
             title="Editar Produto"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="cursor-pointer w-4 h-4" />
           </button>
           <button
             onClick={() => void handleDelete(item.id)}
             className="text-red-600 hover:text-red-800 transition-colors"
             title="Excluir Produto"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="cursor-pointer w-4 h-4" />
           </button>
         </div>
       ),
