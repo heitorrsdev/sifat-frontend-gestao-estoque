@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.sifat-bg {
+  background:linear-gradient(to bottom, #ffffff, #9d9d9d94);
+}
