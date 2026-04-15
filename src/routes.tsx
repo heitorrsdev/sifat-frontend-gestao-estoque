@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { Faturamento } from './pages/Faturamento';
 import { Produtos } from './pages/Produtos';
+import { Cadastro } from './pages/Cadastro';
 import Placeholder from './pages/placeholder';
 
 export const router = createBrowserRouter([
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/cadastro',
-        element: <Placeholder />,
+        element: <Cadastro />,
       },
       {
         path: '/editar/:id',
