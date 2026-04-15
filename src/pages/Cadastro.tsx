@@ -61,7 +61,7 @@ const {
         nome: data.nome,
         idGrupo: data.idGrupo,
         precoVenda: data.precoVenda,
-        quantidadeEstoque: data.quantidadeEstoque,
+        quantidadeEstoque: data.quantidadeEstoque ?? 0,
       };
 
       if (isEditMode) {
