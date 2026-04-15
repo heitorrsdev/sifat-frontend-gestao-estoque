@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
+import { Produtos } from './pages/Produtos';
 import Placeholder from './pages/placeholder';
 
 export const router = createBrowserRouter([
@@ -9,7 +10,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Placeholder />,
+        element: <Produtos />,
       },
       {
         path: '/faturamento',
