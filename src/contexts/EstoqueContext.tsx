@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useCallback, type ReactNode, useMem
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
 import type { Produto, ProdutoPayload, Venda, Grupo } from '../types';
+import { AxiosError } from 'axios';
 
 interface EstoqueContextData {
   produtos: Produto[];
@@ -64,14 +65,16 @@ export function EstoqueProvider({ children }: { children: ReactNode }) {
     try {
       await api.put(`/produtos_cadastrados/${String(id)}`, payload);
       
-      setProdutos((prev) =>
-        prev.map((produto) => (produto.id === id ? { ...produto, ...payload } : produto))
-      );
-
+      setProdutos((prev) => prev.map((p) => p.id === id ? { ...payload, id } as Produto : p));
       toast.success('Produto atualizado com sucesso!');
-    } catch (error) {
-      toast.error('Falha ao atualizar o produto.');
-      throw error;
+      
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response?.status === 404) {
+        setProdutos((prev) => prev.map((p) => p.id === id ? { ...payload, id } as Produto : p));
+        toast.success('Produto atualizado (Mock local)');
+      } else {
+        toast.error('Erro ao atualizar o produto na API.');
+      }
     }
   }, []);
 
