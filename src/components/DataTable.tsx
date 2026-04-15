@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, Search, ChevronLeft, ChevronRight } from 'lucid
 
 export interface Column<T> {
   header: string;
-  accessor: keyof T | string; // 'string' permite colunas calculadas/virtuais
+  accessor: keyof T | string;
   render?: (item: T) => React.ReactNode;
   sortable?: boolean;
 }
@@ -18,7 +18,7 @@ interface DataTableProps<T> {
 
 type SortDirection = 'asc' | 'desc';
 
-export function DataTable<T >({
+export function DataTable<T>({
   data,
   columns,
   filterPlaceholder = 'Buscar...',
